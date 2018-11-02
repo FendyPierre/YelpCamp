@@ -16,12 +16,24 @@ app.get("/", function(req, res){
 
 app.get("/campgrounds", function(req,res){
     res.render("campgrounds", {campgrounds: campgrounds});
+});
+
+app.get("/campgrounds/new", function(req, res){
+    res.render("new")
 
 });
+
 app.post("/campgrounds", function(req,res){
     //get data from form
+    var name = req.body.name;
+    var image = req.body.image;
+
     //add data to campgrounds
+    var newcamp = {name: name, image: image}
+    campgrounds.push(newcamp);
+
     //redirect to campgrounds page
+    res.redirect("campgrounds");
 });
 
 app.listen(3000, function () {
