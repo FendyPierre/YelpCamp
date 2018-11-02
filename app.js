@@ -1,8 +1,8 @@
 var express = require("express");
-app = express();
-var express = require("express");
 var app = express();
 var bodyParser = require("body-parser");
+
+app.use(bodyParser.urlencoded({extended: true}));
 app.set("view engine", "ejs");
 
 var campgrounds = [
@@ -18,7 +18,11 @@ app.get("/campgrounds", function(req,res){
     res.render("campgrounds", {campgrounds: campgrounds});
 
 });
-
+app.post("/campgrounds", function(req,res){
+    //get data from form
+    //add data to campgrounds
+    //redirect to campgrounds page
+});
 
 app.listen(3000, function () {
     console.log("Server has started!");
