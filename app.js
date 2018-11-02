@@ -11,17 +11,19 @@ app.set("view engine", "ejs");
 //schema setup
 var campgroundSchema = new mongoose.Schema({
     name: String,
-    image: String
+    image: String,
+    description: String
 });
 
 var Campground = mongoose.model("Campground", campgroundSchema);
 
-function createCamp(name, image){
+function createCamp(name, image, description){
     Campground.create(
         {
 
         name: name, 
-        image: image
+        image: image,
+        description: description
 
         }, function(err, camp){
             if(err){
@@ -35,19 +37,23 @@ function createCamp(name, image){
     });
 }
 
-var campgrounds = [
-    {name: "salmon Creek", image: "https://images.pexels.com/photos/33109/fall-autumn-red-season.jpg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"},
-    {name: "salmon Creek", image: "https://images.pexels.com/photos/33109/fall-autumn-red-season.jpg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"},
-    {name: "salmon Creek", image: "https://images.pexels.com/photos/33109/fall-autumn-red-season.jpg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"},
-    {name: "salmon Creek", image: "https://images.pexels.com/photos/33109/fall-autumn-red-season.jpg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"},
-    {name: "salmon Creek", image: "https://images.pexels.com/photos/33109/fall-autumn-red-season.jpg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"},
-    {name: "salmon Creek", image: "https://images.pexels.com/photos/33109/fall-autumn-red-season.jpg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"},
-    {name: "salmon Creek", image: "https://images.pexels.com/photos/33109/fall-autumn-red-season.jpg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"},
-    {name: "salmon Creek", image: "https://images.pexels.com/photos/33109/fall-autumn-red-season.jpg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"},
-    {name: "salmon Creek", image: "https://images.pexels.com/photos/33109/fall-autumn-red-season.jpg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"},
-    {name: "salmon Creek", image: "https://images.pexels.com/photos/33109/fall-autumn-red-season.jpg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"},
-    {name: "Worldstar", image: "https://images.pexels.com/photos/33109/fall-autumn-red-season.jpg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"}
-]
+function findCamp(id){
+    Campground.findOne(
+        {
+            _id: id
+
+        }, function(err, camp){
+            if(err || camp == null){
+                console.log("failed to find camp");
+                console.log(err);
+                console.log(camp);
+            }
+            else{
+                console.log("successfully found dog");
+// res.render("camp");
+            }
+    });
+}
 
 app.get("/", function(req, res){
     res.render("landing")
@@ -75,13 +81,24 @@ app.post("/campgrounds", function(req,res){
     //get data from form
     var name = req.body.name;
     var image = req.body.image;
+    var description = req.body.description;
 
     //add data to campgrounds
-    createCamp(name, image);
+    createCamp(name, image, description);
 
     //redirect to campgrounds page
     res.redirect("campgrounds");
 });
+
+app.get("/campgrounds/:id", function (req, res) {
+        var id = req.body.id;
+        findCamp(id);
+        
+  })
+
+
+
+
 
 app.listen(3000, function () {
     console.log("Server has started!");
