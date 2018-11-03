@@ -37,20 +37,18 @@ function createCamp(name, image, description){
     });
 }
 
-function findCamp(id){
-    Campground.findOne(
-        {
-            _id: id
-
-        }, function(err, camp){
+function findCamp(id, res){
+    Campground.findById(
+        id,
+        function(err, camp){
             if(err || camp == null){
                 console.log("failed to find camp");
                 console.log(err);
-                console.log(camp);
+                res.redirect("/campgrounds");
             }
             else{
-                console.log("successfully found dog");
-// res.render("camp");
+                console.log("successfully found camp");
+                res.render("show", {campground: camp});
             }
     });
 }
@@ -66,7 +64,7 @@ app.get("/campgrounds", function(req,res){
             console.log(err);
         }
         else{
-            res.render("campgrounds", {campgrounds: allCamps});
+            res.render("index", {campgrounds: allCamps});
         }
      })
     
@@ -87,15 +85,13 @@ app.post("/campgrounds", function(req,res){
     createCamp(name, image, description);
 
     //redirect to campgrounds page
-    res.redirect("campgrounds");
+    res.redirect("/campgrounds");
 });
 
 app.get("/campgrounds/:id", function (req, res) {
-        var id = req.body.id;
-        findCamp(id);
-        
+        var id = req.params.id;
+        findCamp(id, res);
   })
-
 
 
 
