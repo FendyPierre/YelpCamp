@@ -35,8 +35,7 @@ function createCamp(name, image, description){
 }
 
 function findCamp(id, res){
-    Campground.findById(
-        id,
+    Campground.findById(id).populate("comments").exec(
         function(err, camp){
             if(err || camp == null){
                 console.log("failed to find camp");
@@ -44,8 +43,8 @@ function findCamp(id, res){
                 res.redirect("/campgrounds");
             }
             else{
-                console.log("successfully found camp");
-                res.render("show", {campground: camp});
+                console.log("successfully found camp" + camp);
+                res.render("./campgrounds/show", {campground: camp});
             }
     });
 }
@@ -61,14 +60,14 @@ app.get("/campgrounds", function(req,res){
             console.log(err);
         }
         else{
-            res.render("index", {campgrounds: allCamps});
+            res.render("./campgrounds/index", {campgrounds: allCamps});
         }
      })
     
 });
 
 app.get("/campgrounds/new", function(req, res){
-    res.render("new")
+    res.render("./campgrounds/new")
 
 });
 
@@ -91,7 +90,10 @@ app.get("/campgrounds/:id", function (req, res) {
   })
 
 
-
+//comments routes
+app.get("/campgrounds/:id/comments/new", function(req, res){
+  res.render("./comments/new")
+});
 
 app.listen(3000, function () {
     console.log("Server has started!");
