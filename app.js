@@ -3,7 +3,7 @@ var express     = require("express");
     bodyParser  = require("body-parser"),
     mongoose    = require("mongoose"),
     Campground  = require("./models/campground"),
-    CommentM     = require("./models/comment"),
+    Comment     = require("./models/comment"),
     User        = require("./models/user"),
     seedDB      = require("./seeds");
 
@@ -92,7 +92,35 @@ app.get("/campgrounds/:id", function (req, res) {
 
 //comments routes
 app.get("/campgrounds/:id/comments/new", function(req, res){
-  res.render("./comments/new")
+   var id = req.params.id;
+    Campground.findById(id, function(err, campground){
+        if(!err){
+            res.render("./comments/new", {campground: campground});
+        }
+        else{
+             console.log("Unable to load new comment page. Error:" + err);
+        }
+    })
+});
+
+app.post("/campgrounds/:id/comments/", function(req, res){
+    var id = req.params.id;
+    var comment = req.body.comment;
+    Campground.findById(id, function(err, campground){
+        if(!err){
+            Comment.create(comment, function(err, comment){
+                if(!err){
+                    campground.comments.push(comment);
+                    campground.save();
+                    res.redirect("/campgrounds/" + id);
+                }
+            });
+        }
+        else{
+             console.log("Unable to post comment. Error:" + err);
+        }
+    })
+
 });
 
 app.listen(3000, function () {
