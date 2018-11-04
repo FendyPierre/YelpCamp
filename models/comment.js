@@ -3,9 +3,8 @@ var mongoose = require("mongoose");
 
 //schema setup
 var commentSchema = new mongoose.Schema({
-    name: String,
-    image: String,
-    description: String
+    text: String,
+    auther: String,
 });
 
 Comment =  mongoose.model("Comment", commentSchema);
